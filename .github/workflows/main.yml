@@ -10,20 +10,15 @@ on:
 
 jobs:
   test:
-    name: Build & Test App
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-    if: "contains(github.event.commits[0].message, '[build app]')"
 
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '14.x'
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run unit tests
         run: npm run test
