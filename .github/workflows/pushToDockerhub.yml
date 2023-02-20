@@ -2,7 +2,7 @@ name: Build and push Docker image
 
 on:
   workflow_run:
-    workflows: ["Unit tests"]
+    workflows: ["Deploy to production"]
     branches:
       - main
     types:
