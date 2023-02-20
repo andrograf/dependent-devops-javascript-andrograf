@@ -1,0 +1,27 @@
+name: Build and push Docker image
+
+on:
+  workflow_run:
+    workflows: ["Unit tests"]
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: |
+          docker build -t <your-dockerhub-username>/<your-image-name>:latest .
+        env:
+          DOCKER_BUILDKIT: 1
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push <your-dockerhub-username>/<your-image-name>:latest
+        env:
+          DOCKER_BUILDKIT: 1
