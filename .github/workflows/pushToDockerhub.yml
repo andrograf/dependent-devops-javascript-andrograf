@@ -1,0 +1,27 @@
+name: Build and push Docker image
+
+on:
+  workflow_run:
+    workflows: ["Deploy to production"]
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: |
+          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}"/"${{ secrets.DOCKERHUB_IMAGE }}":latest .
+        env:
+          DOCKER_BUILDKIT: 1
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}"/"${{ secrets.DOCKERHUB_IMAGE }}":latest
+        env:
+          DOCKER_BUILDKIT: 1
