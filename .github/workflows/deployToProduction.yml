@@ -22,4 +22,5 @@ jobs:
         run:  npm install 
               npm ci
       - name: Deploy to production
-        run: npm run deploy
+        run: npm install deploy
+             npm run deploy
